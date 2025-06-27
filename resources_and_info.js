@@ -1,22 +1,22 @@
 var semester = "Summer 2025";
-var userSpreadsheetId = "1gZOXAFe_7TbV-WeuVg21c0FB-Puy-7lFl97srzbZ-F4";
-var urlSpreadsheetId = "1ib4Xw_0WhWD-dVkd6jOT1NSNMK_C1F05UW1JNYc98eg";
+var userSpreadsheetId = "1gZOXAFe_7TbV-WeuVg21c0F";
+var urlSpreadsheetId = "1ib4Xw_0WhWD-dVkd6jOT1N";
 
 const templatesAllCourse = {
   "CSE250": {
-    gradesheetId: "1oEdfR3B8wmO-t2Cz8DwxFEqxmveMjjgRy04E5udZvZc",
-    reportFormId: "1gj599_RAAW8f3O8ZDV665bzGQx2PAS_eTlifHKpjoWE",
-    destinationFolderId: "10du4hj4nMnrIiLr8lKoaGfT--MpZKtkO"
+    gradesheetId: "1oEdfR3B8wmO-t2Cz8DwxFEqxmveMjj",
+    reportFormId: "1gj599_RAAW8f3O8Z",
+    destinationFolderId: "10du4hj4"
   },
   "CSE251": {
-    gradesheetId: "1nJHPHn09mN1Nw7LO4wrtcW_hXwqjTfDhqnmP-GNj6H8",
-    reportFormId: "1WANV7111zXNgBfXgcxThp7XMz6ajTS3I8YiqB0Itod4",
-    destinationFolderId: "1NwzGTATo86FZe7QubL3JkVpk7WUTYTmP"
+    gradesheetId: "1nJHPHn09mN1Nw7LO4",
+    reportFormId: "1WANV7111zXNgBfXgcxThp",
+    destinationFolderId: "1NwzGTATo"
   },
   "CSE350": {
-    gradesheetId: "17zyhJKCD-vAar1eQyMT7GzDD0CECSNFoWAd3Hvlp04U",
-    reportFormId: "118A_McgLEciifblJH6Vg2Thk--E0zT1W_xSmk69cFxw",
-    destinationFolderId: "1FDF7Gp5SjV4Lov34TS2FyPI_29j2BHVU"
+    gradesheetId: "17zyhJKCD-vAar1e",
+    reportFormId: "118A_McgLEciifblJ",
+    destinationFolderId: "1FDF7Gp5SjV4Lo"
   },
 };
 
