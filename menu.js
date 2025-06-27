@@ -1,8 +1,6 @@
-var ui = SpreadsheetApp.getUi();
 function onOpen(){
-  
   ui.createMenu('LAB GRADESHEET MENU')
-      .addItem('GENERATE LAB GRADESHEET', 'generateGradesheet')
+      .addItem('GENERATE LAB GRADESHEET', 'main')
       .addToUi();
   
   processStatusCell.setValue("");
