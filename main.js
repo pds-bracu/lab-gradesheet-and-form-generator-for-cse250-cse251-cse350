@@ -101,7 +101,7 @@ function createForms(course, section, gradesheet, templates, folder){
   var reportSubmissionForm = FormApp.openById(reportSubmissionFormFile.getId());
   reportSubmissionForm.setPublished(true);
   reportSubmissionForm.setAcceptingResponses(true);
-  gradesheet.getSheetByName("Meta").getRange("F3").setValue(reportSubmissionForm.getPublishedUrl());
+  gradesheet.getSheetByName("Meta").getRange("F3").setValue(reportSubmissionForm.shortenFormUrl(reportSubmissionForm.getPublishedUrl()));
   gradesheet.getSheetByName("Meta").getRange("F4").setValue(reportSubmissionForm.getEditUrl());
   userSpreadsheet.toast("Almost there");
   setResponseSheet(folder, reportSubmissionForm, gradesheet, "Responses: " + fileNameReportForm);
