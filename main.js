@@ -98,6 +98,7 @@ function createForms(course, section, gradesheet, templates, folder){
   var fileNameReportForm = course + "-" + section + "L Report Submission Form - " + semester;
   var reportSubmissionFormFile = DriveApp.getFileById(templates.reportFormId).makeCopy(fileNameReportForm, folder);
   var reportSubmissionForm = FormApp.openById(reportSubmissionFormFile.getId());
+  reportSubmissionForm.setPublished(true);
   reportSubmissionForm.setAcceptingResponses(true);
   gradesheet.getSheetByName("Meta").getRange("F3").setValue(reportSubmissionForm.getPublishedUrl());
   gradesheet.getSheetByName("Meta").getRange("F4").setValue(reportSubmissionForm.getEditUrl());
