@@ -1,4 +1,5 @@
 function main() {
+  var ui = getUI();
   var course = userSheet.getRange("B1").getValue();
   const templates = templatesAllCourse[course];
   if(!templates) {
