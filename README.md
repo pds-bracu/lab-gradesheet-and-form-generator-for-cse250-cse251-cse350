@@ -66,5 +66,3 @@ After completion, a toast message will confirm that the process is done, and ema
 - `Forms` – Lab report submission forms.
 - `Response Sheets` – Linked response spreadsheets for each form.
 - `Script` – The Google Apps Script file that automates all of the above.
-
-See the full license in the [LICENSE](LICENSE) file.
