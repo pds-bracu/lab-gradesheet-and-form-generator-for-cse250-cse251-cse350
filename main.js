@@ -3,7 +3,7 @@ function main() {
   var course = userSheet.getRange("B1").getValue();
   const templates = templatesAllCourse[course];
   if(!templates) {
-    processStatusCell.setValue("Select course (CSE250 or CSE251 or CSE350) and try again.");
+    processStatusCell.setValue("Select course (CSE250 or CSE251 or CSE350 or CSE460) and try again.");
     SpreadsheetApp.flush();
     return;
   }
@@ -36,26 +36,41 @@ function main() {
 
 function createGradesheet(course, section, templates, storeFolder) {
   userSpreadsheet.toast("Creating folder");
-  var secFolder = storeFolder.createFolder(course + "-" + section + "L - " + semester);
-  var formFolder = secFolder.createFolder("Forms");
+  var secFolder = storeFolder.createFolder(course + "-" + ("0" + section).slice(-2) + "L - " + semester);
+  var formFolderName = "Report Submission";
+
+  if(course == "CSE460") {
+    formFolderName = "Assessment Submission";
+  }
+  
+  var formFolder = secFolder.createFolder(formFolderName);
   userSpreadsheet.toast("Creating gradesheet");
-  var fileNameGradesheet = course + "-" + section + "L Lab Gradesheet - " + semester;
+  var fileNameGradesheet = course + "-" + ("0" + section).slice(-2) + "L Lab Gradesheet - " + semester;
+  /////////////////////////////////////////////////////////////////////////////////////
+  if(course == "CSE250" && section == 11) {
+    templates.gradesheetId = "1h_gsVHLl4sxvesnTHo-OkneAjZYfdIsej-lhzncuS0k";
+  }
+  if(course == "CSE251" && [2, 4, 5, 7].includes(section)) {
+    templates.gradesheetId = "1WWEhVCZT0_VOKN7XDla0CNI0M67SvDvsAPNA6QByvLg";
+  }
+  /////////////////////////////////////////////////////////////////////////////////////
+  
   var newGradesheetFile = DriveApp.getFileById(templates.gradesheetId).makeCopy(fileNameGradesheet, secFolder);
   var newGradesheet = SpreadsheetApp.openById(newGradesheetFile.getId());
   
   var metaSheet = newGradesheet.getSheetByName("Meta");
-  metaSheet.getRange("B2").setValue(parseInt(section));
+  metaSheet.getRange("B2").setValue(section);
 
   saveGradesheetURLs(course, section, newGradesheet.getUrl());
-
   createForms(course, section, newGradesheet, templates, formFolder);
 
   permission(newGradesheet.getId(), 'reader', 'anyone', null, false);
   permission(secFolder.getId(), 'writer', 'user', getCofacultyEmail(newGradesheet), false);
   permission(secFolder.getId(), 'writer', 'user', 'purbayan.das@bracu.ac.bd', false);
+  Utilities.sleep(500);
   permission(secFolder.getId(), 'owner', 'user', userEmail, true);
 
-  processStatusCell.setValue("Done! Please check your email.");
+  processStatusCell.setValue("Done! Please check your email or the course folders attached below.");
   SpreadsheetApp.flush();
   Utilities.sleep(5000);
   processStatusCell.setValue("");
@@ -79,7 +94,7 @@ function permission(fileId, role, type, email, sentNotification) {
     'type': type,
   };
   if(type === 'anyone') {
-    permissionDetails.withLink = true;
+    permissionDetails.value = true;
   }
   if(type === 'user' || type === 'group') {
     permissionDetails.value = email;
@@ -95,14 +110,22 @@ function permission(fileId, role, type, email, sentNotification) {
 }
 
 function createForms(course, section, gradesheet, templates, folder){
-  userSpreadsheet.toast("Creating necessary forms");
-  var fileNameReportForm = course + "-" + section + "L Report Submission Form - " + semester;
+  userSpreadsheet.toast("Creating report submission form");
+  var fileNameReportForm = course + "-" + ("0" + section).slice(-2) + "L Report Submission Form - " + semester;
+
+  if(course == "CSE460") {
+    fileNameReportForm = course + "-" + ("0" + section).slice(-2) + "L Assessment Submission Form - " + semester;
+  }
+
   var reportSubmissionFormFile = DriveApp.getFileById(templates.reportFormId).makeCopy(fileNameReportForm, folder);
   var reportSubmissionForm = FormApp.openById(reportSubmissionFormFile.getId());
   reportSubmissionForm.setPublished(true);
   reportSubmissionForm.setAcceptingResponses(true);
+  reportSubmissionForm.setProgressBar(true);
   gradesheet.getSheetByName("Meta").getRange("F3").setValue(reportSubmissionForm.shortenFormUrl(reportSubmissionForm.getPublishedUrl()));
+  SpreadsheetApp.flush();
   gradesheet.getSheetByName("Meta").getRange("F4").setValue(reportSubmissionForm.getEditUrl());
+  SpreadsheetApp.flush();
   userSpreadsheet.toast("Almost there");
   setResponseSheet(folder, reportSubmissionForm, gradesheet, "Responses: " + fileNameReportForm);
 }
@@ -110,12 +133,12 @@ function createForms(course, section, gradesheet, templates, folder){
 function setResponseSheet(folder, form, gradesheet, fileName) {
   var responseSheet = SpreadsheetApp.create(fileName);
   responseSheetFile = DriveApp.getFileById(responseSheet.getId());
-  responseSheetFile.moveTo(folder);
   form.setDestination(FormApp.DestinationType.SPREADSHEET, responseSheet.getId());
   responseSheet.deleteSheet(responseSheet.getSheetByName("Sheet1"));
-  gradesheet.getSheetByName("Meta").getRange("F5").setValue(responseSheet.getUrl());
-  
+  responseSheetFile.moveTo(folder);
   permission(responseSheet.getId(), 'reader', 'anyone', null, false);
+  gradesheet.getSheetByName("Meta").getRange("F5").setValue(responseSheet.getUrl());
+  SpreadsheetApp.flush();
 }
 
 function saveGradesheetURLs(course, section, gradesheetUrl) {
@@ -126,7 +149,8 @@ function saveGradesheetURLs(course, section, gradesheetUrl) {
   urlSheet.getRange("A" + (lastRowWithData+1)).setValue(section);
   urlSheet.getRange("B" + (lastRowWithData+1)).setValue(gradesheetUrl);
   urlSheet.getRange("C" + (lastRowWithData+1)).setValue(userEmail);
-  urlSheet.getRange("E" + (lastRowWithData+1)).setValue(new Date());
+  var bdTime = Utilities.formatDate(new Date(), "Asia/Dhaka", "MM/dd/yyyy HH:mm:ss");
+  urlSheet.getRange("E" + (lastRowWithData+1)).setValue(bdTime);
 }
 
 function checkIfSectionIsValid(course, section) {
